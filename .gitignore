@@ -3,6 +3,8 @@ data/
 raw/
 *.parquet
 probe_out/
+# Real API samples stay local; committed fixtures are synthetic
+tests/fixtures/golemio_real/
 
 # Secrets
 .env

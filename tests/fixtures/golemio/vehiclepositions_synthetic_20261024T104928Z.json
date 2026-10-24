@@ -1,0 +1,1217 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          14.50826,
+          50.10483
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 157,
+          "delay": {
+            "actual": 280,
+            "last_stop_arrival": null,
+            "last_stop_departure": 272
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:47:28+02:00",
+            "departure_time": "2026-10-24T12:47:28+02:00",
+            "id": "SYN000S03",
+            "sequence": 3
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:49:28+02:00",
+            "departure_time": "2026-10-24T12:49:28+02:00",
+            "id": "SYN000S04",
+            "sequence": 4
+          },
+          "origin_timestamp": "2026-10-24T12:49:23+02:00",
+          "shape_dist_traveled": "1.940",
+          "speed": null,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": false,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L000",
+            "route_short_name": "000",
+            "route_type": 0,
+            "trip_headsign": "Synthetic Terminus 1",
+            "trip_id": "S000_100_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "000",
+          "sequence_id": 1,
+          "start_timestamp": "2026-10-24T12:43:28+02:00",
+          "usb_chargers": true,
+          "vehicle_registration_number": 7000,
+          "vehicle_type": {
+            "description_cs": "tramvaj",
+            "description_en": "tram",
+            "id": 2
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.30877,
+          50.07084
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 31,
+          "delay": {
+            "actual": 283,
+            "last_stop_arrival": 275,
+            "last_stop_departure": null
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:44:28+02:00",
+            "departure_time": "2026-10-24T12:44:28+02:00",
+            "id": "SYN001S03",
+            "sequence": 3
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:46:28+02:00",
+            "departure_time": "2026-10-24T12:46:28+02:00",
+            "id": "SYN001S04",
+            "sequence": 4
+          },
+          "origin_timestamp": "2026-10-24T12:49:16+02:00",
+          "shape_dist_traveled": "1.940",
+          "speed": null,
+          "state_position": "at_stop",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L001",
+            "route_short_name": "001",
+            "route_type": 0,
+            "trip_headsign": "Synthetic Terminus 2",
+            "trip_id": "S001_101_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "001",
+          "sequence_id": 2,
+          "start_timestamp": "2026-10-24T12:40:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7001,
+          "vehicle_type": {
+            "description_cs": "tramvaj",
+            "description_en": "tram",
+            "id": 2
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.49773,
+          50.03895
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 262,
+          "delay": {
+            "actual": 281,
+            "last_stop_arrival": 273,
+            "last_stop_departure": 273
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:43:28+02:00",
+            "departure_time": "2026-10-24T12:43:28+02:00",
+            "id": "SYN002S04",
+            "sequence": 4
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:45:28+02:00",
+            "departure_time": "2026-10-24T12:45:28+02:00",
+            "id": "SYN002S05",
+            "sequence": 5
+          },
+          "origin_timestamp": "2026-10-24T12:49:09+02:00",
+          "shape_dist_traveled": "2.790",
+          "speed": null,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L002",
+            "route_short_name": "002",
+            "route_type": 0,
+            "trip_headsign": "Synthetic Terminus 3",
+            "trip_id": "S002_102_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "002",
+          "sequence_id": 3,
+          "start_timestamp": "2026-10-24T12:37:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7002,
+          "vehicle_type": {
+            "description_cs": "tramvaj",
+            "description_en": "tram",
+            "id": 2
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.42571,
+          50.09993
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 125,
+          "delay": {
+            "actual": -46,
+            "last_stop_arrival": -54,
+            "last_stop_departure": null
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:14:28+02:00",
+            "departure_time": "2026-10-24T12:14:28+02:00",
+            "id": "SYN013S06",
+            "sequence": 6
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:16:28+02:00",
+            "departure_time": "2026-10-24T12:16:28+02:00",
+            "id": "SYN013S07",
+            "sequence": 7
+          },
+          "origin_timestamp": "2026-10-24T12:48:52+02:00",
+          "shape_dist_traveled": "4.490",
+          "speed": null,
+          "state_position": "at_stop",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L013",
+            "route_short_name": "013",
+            "route_type": 0,
+            "trip_headsign": "Synthetic Terminus 4",
+            "trip_id": "S013_113_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "013",
+          "sequence_id": 2,
+          "start_timestamp": "2026-10-24T12:04:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7013,
+          "vehicle_type": {
+            "description_cs": "tramvaj",
+            "description_en": "tram",
+            "id": 2
+          },
+          "wheelchair_accessible": false
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.32152,
+          50.10443
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 88,
+          "delay": {
+            "actual": 265,
+            "last_stop_arrival": 257,
+            "last_stop_departure": null
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:11:28+02:00",
+            "departure_time": "2026-10-24T12:11:28+02:00",
+            "id": "SYN016S09",
+            "sequence": 9
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:13:28+02:00",
+            "departure_time": "2026-10-24T12:13:28+02:00",
+            "id": "SYN016S10",
+            "sequence": 10
+          },
+          "origin_timestamp": "2026-10-24T12:48:31+02:00",
+          "shape_dist_traveled": "7.040",
+          "speed": null,
+          "state_position": "at_stop",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": false,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L016",
+            "route_short_name": "016",
+            "route_type": 0,
+            "trip_headsign": "Synthetic Terminus 2",
+            "trip_id": "S016_116_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "016",
+          "sequence_id": 5,
+          "start_timestamp": "2026-10-24T11:55:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7016,
+          "vehicle_type": {
+            "description_cs": "tramvaj",
+            "description_en": "tram",
+            "id": 2
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.47831,
+          50.1365
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 204,
+          "delay": {
+            "actual": 205,
+            "last_stop_arrival": 197,
+            "last_stop_departure": 197
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:44:28+02:00",
+            "departure_time": "2026-10-24T12:44:28+02:00",
+            "id": "SYN003S06",
+            "sequence": 6
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:46:28+02:00",
+            "departure_time": "2026-10-24T12:46:28+02:00",
+            "id": "SYN003S07",
+            "sequence": 7
+          },
+          "origin_timestamp": "2026-10-24T12:49:02+02:00",
+          "shape_dist_traveled": "4.490",
+          "speed": null,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L103",
+            "route_short_name": "103",
+            "route_type": 1,
+            "trip_headsign": "Synthetic Terminus 4",
+            "trip_id": "S103_103_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "103",
+          "sequence_id": 4,
+          "start_timestamp": "2026-10-24T12:34:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7003,
+          "vehicle_type": {
+            "description_cs": "metro",
+            "description_en": "metro",
+            "id": 1
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.34307,
+          49.98958
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 253,
+          "delay": {
+            "actual": 43,
+            "last_stop_arrival": 35,
+            "last_stop_departure": 35
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:17:28+02:00",
+            "departure_time": "2026-10-24T12:17:28+02:00",
+            "id": "SYN012S06",
+            "sequence": 6
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:19:28+02:00",
+            "departure_time": "2026-10-24T12:19:28+02:00",
+            "id": "SYN012S07",
+            "sequence": 7
+          },
+          "origin_timestamp": "2026-10-24T12:48:59+02:00",
+          "shape_dist_traveled": "4.490",
+          "speed": null,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": false,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L1112",
+            "route_short_name": "1112",
+            "route_type": 11,
+            "trip_headsign": "Synthetic Terminus 3",
+            "trip_id": "S1112_112_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "1112",
+          "sequence_id": 1,
+          "start_timestamp": "2026-10-24T12:07:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7012,
+          "vehicle_type": {
+            "description_cs": "trolejbus",
+            "description_en": "trolleybus",
+            "id": 18
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.35813,
+          50.01102
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 222,
+          "delay": {
+            "actual": 197,
+            "last_stop_arrival": 189,
+            "last_stop_departure": null
+          },
+          "is_canceled": false,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:41:28+02:00",
+            "departure_time": "2026-10-24T12:41:28+02:00",
+            "id": "SYN004S06",
+            "sequence": 6
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:43:28+02:00",
+            "departure_time": "2026-10-24T12:43:28+02:00",
+            "id": "SYN004S07",
+            "sequence": 7
+          },
+          "origin_timestamp": "2026-10-24T12:48:55+02:00",
+          "shape_dist_traveled": "4.490",
+          "speed": null,
+          "state_position": "at_stop",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": null,
+            "scheduled": "SYNTH RAIL"
+          },
+          "air_conditioned": null,
+          "cis": {
+            "line_id": "none",
+            "trip_number": 4004
+          },
+          "gtfs": {
+            "route_id": "L204",
+            "route_short_name": "204",
+            "route_type": 2,
+            "trip_headsign": "Synthetic Terminus 5",
+            "trip_id": "S204_104_261024",
+            "trip_short_name": "Os 9004"
+          },
+          "origin_route_name": null,
+          "sequence_id": null,
+          "start_timestamp": "2026-10-24T12:31:28+02:00",
+          "usb_chargers": null,
+          "vehicle_registration_number": null,
+          "vehicle_type": null,
+          "wheelchair_accessible": false
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.50628,
+          50.12257
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 130,
+          "delay": {
+            "actual": 136,
+            "last_stop_arrival": 128,
+            "last_stop_departure": 128
+          },
+          "is_canceled": false,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:40:28+02:00",
+            "departure_time": "2026-10-24T12:40:28+02:00",
+            "id": "SYN005S07",
+            "sequence": 7
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:42:28+02:00",
+            "departure_time": "2026-10-24T12:42:28+02:00",
+            "id": "SYN005S08",
+            "sequence": 8
+          },
+          "origin_timestamp": "2026-10-24T12:48:48+02:00",
+          "shape_dist_traveled": "5.340",
+          "speed": 25,
+          "state_position": "off_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": null,
+            "scheduled": "SYNTH RAIL"
+          },
+          "air_conditioned": null,
+          "cis": {
+            "line_id": "none",
+            "trip_number": 4005
+          },
+          "gtfs": {
+            "route_id": "L205",
+            "route_short_name": "205",
+            "route_type": 2,
+            "trip_headsign": "Synthetic Terminus 1",
+            "trip_id": "S205_105_261024",
+            "trip_short_name": "Os 9005"
+          },
+          "origin_route_name": null,
+          "sequence_id": null,
+          "start_timestamp": "2026-10-24T12:28:28+02:00",
+          "usb_chargers": null,
+          "vehicle_registration_number": null,
+          "vehicle_type": null,
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.41956,
+          49.99443
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 22,
+          "delay": {
+            "actual": 162,
+            "last_stop_arrival": 154,
+            "last_stop_departure": 154
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:41:28+02:00",
+            "departure_time": "2026-10-24T12:41:28+02:00",
+            "id": "SYN006S09",
+            "sequence": 9
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:43:28+02:00",
+            "departure_time": "2026-10-24T12:43:28+02:00",
+            "id": "SYN006S10",
+            "sequence": 10
+          },
+          "origin_timestamp": "2026-10-24T12:48:41+02:00",
+          "shape_dist_traveled": "7.040",
+          "speed": null,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L306",
+            "route_short_name": "306",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 2",
+            "trip_id": "S306_106_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "306",
+          "sequence_id": 1,
+          "start_timestamp": "2026-10-24T12:25:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7006,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.60142,
+          50.00532
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 158,
+          "delay": {
+            "actual": 205,
+            "last_stop_arrival": null,
+            "last_stop_departure": null
+          },
+          "is_canceled": false,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:38:28+02:00",
+            "departure_time": "2026-10-24T12:38:28+02:00",
+            "id": "SYN007S09",
+            "sequence": 9
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:40:28+02:00",
+            "departure_time": "2026-10-24T12:40:28+02:00",
+            "id": "SYN007S10",
+            "sequence": 10
+          },
+          "origin_timestamp": "2026-10-24T12:48:34+02:00",
+          "shape_dist_traveled": "7.040",
+          "speed": null,
+          "state_position": "at_stop",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH REGIONAL 2",
+            "scheduled": "SYNTH REGIONAL 2"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": "900007",
+            "trip_number": 4007
+          },
+          "gtfs": {
+            "route_id": "L307",
+            "route_short_name": "307",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 3",
+            "trip_id": "S307_107_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "307",
+          "sequence_id": 2,
+          "start_timestamp": "2026-10-24T12:22:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7000,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.35898,
+          50.0273
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 44,
+          "delay": {
+            "actual": 136,
+            "last_stop_arrival": 128,
+            "last_stop_departure": 128
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:37:28+02:00",
+            "departure_time": "2026-10-24T12:37:28+02:00",
+            "id": "SYN008S10",
+            "sequence": 10
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:39:28+02:00",
+            "departure_time": "2026-10-24T12:39:28+02:00",
+            "id": "SYN008S11",
+            "sequence": 11
+          },
+          "origin_timestamp": "2026-10-24T12:48:27+02:00",
+          "shape_dist_traveled": "7.890",
+          "speed": null,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": false,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L308",
+            "route_short_name": "308",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 4",
+            "trip_id": "S308_108_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "308",
+          "sequence_id": 3,
+          "start_timestamp": "2026-10-24T12:19:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7008,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.38623,
+          50.0798
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 284,
+          "delay": {
+            "actual": 107,
+            "last_stop_arrival": 99,
+            "last_stop_departure": 99
+          },
+          "is_canceled": false,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:20:28+02:00",
+            "departure_time": "2026-10-24T12:20:28+02:00",
+            "id": "SYN009S03",
+            "sequence": 3
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:22:28+02:00",
+            "departure_time": "2026-10-24T12:22:28+02:00",
+            "id": "SYN009S04",
+            "sequence": 4
+          },
+          "origin_timestamp": "2026-10-24T12:49:20+02:00",
+          "shape_dist_traveled": "1.940",
+          "speed": 29,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH REGIONAL 1",
+            "scheduled": "SYNTH REGIONAL 1"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": "900009",
+            "trip_number": 4009
+          },
+          "gtfs": {
+            "route_id": "L309",
+            "route_short_name": "309",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 5",
+            "trip_id": "S309_109_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "309",
+          "sequence_id": 4,
+          "start_timestamp": "2026-10-24T12:16:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7009,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.64562,
+          50.0592
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 18,
+          "delay": {
+            "actual": 154,
+            "last_stop_arrival": 146,
+            "last_stop_departure": null
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:17:28+02:00",
+            "departure_time": "2026-10-24T12:17:28+02:00",
+            "id": "SYN010S03",
+            "sequence": 3
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:19:28+02:00",
+            "departure_time": "2026-10-24T12:19:28+02:00",
+            "id": "SYN010S04",
+            "sequence": 4
+          },
+          "origin_timestamp": "2026-10-24T12:49:13+02:00",
+          "shape_dist_traveled": "1.940",
+          "speed": null,
+          "state_position": "at_stop",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L310",
+            "route_short_name": "310",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 1",
+            "trip_id": "S310_110_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "310",
+          "sequence_id": 5,
+          "start_timestamp": "2026-10-24T12:13:28+02:00",
+          "usb_chargers": true,
+          "vehicle_registration_number": 7010,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.32213,
+          49.98188
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 39,
+          "delay": {
+            "actual": 95,
+            "last_stop_arrival": null,
+            "last_stop_departure": 87
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:13:28+02:00",
+            "departure_time": "2026-10-24T12:13:28+02:00",
+            "id": "SYN014S07",
+            "sequence": 7
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:15:28+02:00",
+            "departure_time": "2026-10-24T12:15:28+02:00",
+            "id": "SYN014S08",
+            "sequence": 8
+          },
+          "origin_timestamp": "2026-10-24T12:48:45+02:00",
+          "shape_dist_traveled": "5.340",
+          "speed": null,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L314",
+            "route_short_name": "314",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 5",
+            "trip_id": "S314_114_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "314",
+          "sequence_id": 3,
+          "start_timestamp": "2026-10-24T12:01:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7014,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.60253,
+          50.1146
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 89,
+          "delay": {
+            "actual": 35,
+            "last_stop_arrival": 27,
+            "last_stop_departure": 27
+          },
+          "is_canceled": false,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:14:28+02:00",
+            "departure_time": "2026-10-24T12:14:28+02:00",
+            "id": "SYN015S09",
+            "sequence": 9
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:16:28+02:00",
+            "departure_time": "2026-10-24T12:16:28+02:00",
+            "id": "SYN015S10",
+            "sequence": 10
+          },
+          "origin_timestamp": "2026-10-24T12:48:38+02:00",
+          "shape_dist_traveled": "7.040",
+          "speed": 35,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH REGIONAL 1",
+            "scheduled": "SYNTH REGIONAL 1"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": "900015",
+            "trip_number": 4015
+          },
+          "gtfs": {
+            "route_id": "L315",
+            "route_short_name": "315",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 1",
+            "trip_id": "S315_115_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "315",
+          "sequence_id": 4,
+          "start_timestamp": "2026-10-24T11:58:28+02:00",
+          "usb_chargers": true,
+          "vehicle_registration_number": 7015,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.39466,
+          50.05075
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 55,
+          "delay": {
+            "actual": 274,
+            "last_stop_arrival": 266,
+            "last_stop_departure": 266
+          },
+          "is_canceled": false,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:10:28+02:00",
+            "departure_time": "2026-10-24T12:10:28+02:00",
+            "id": "SYN017S10",
+            "sequence": 10
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:12:28+02:00",
+            "departure_time": "2026-10-24T12:12:28+02:00",
+            "id": "SYN017S11",
+            "sequence": 11
+          },
+          "origin_timestamp": "2026-10-24T12:48:24+02:00",
+          "shape_dist_traveled": "7.890",
+          "speed": 37,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH REGIONAL 3",
+            "scheduled": "SYNTH REGIONAL 3"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": "900017",
+            "trip_number": 4017
+          },
+          "gtfs": {
+            "route_id": "L317",
+            "route_short_name": "317",
+            "route_type": 3,
+            "trip_headsign": "Synthetic Terminus 3",
+            "trip_id": "S317_117_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "317",
+          "sequence_id": 6,
+          "start_timestamp": "2026-10-24T11:52:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7017,
+          "vehicle_type": {
+            "description_cs": "autobus",
+            "description_en": "bus",
+            "id": 3
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          14.37029,
+          50.06612
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 322,
+          "delay": {
+            "actual": 235,
+            "last_stop_arrival": 227,
+            "last_stop_departure": 227
+          },
+          "is_canceled": false,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:16:28+02:00",
+            "departure_time": "2026-10-24T12:16:28+02:00",
+            "id": "SYN011S04",
+            "sequence": 4
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:18:28+02:00",
+            "departure_time": "2026-10-24T12:18:28+02:00",
+            "id": "SYN011S05",
+            "sequence": 5
+          },
+          "origin_timestamp": "2026-10-24T12:49:06+02:00",
+          "shape_dist_traveled": "2.790",
+          "speed": 31,
+          "state_position": "on_track",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH REGIONAL 3",
+            "scheduled": "SYNTH REGIONAL 3"
+          },
+          "air_conditioned": true,
+          "cis": {
+            "line_id": "900011",
+            "trip_number": 4011
+          },
+          "gtfs": {
+            "route_id": "L411",
+            "route_short_name": "411",
+            "route_type": 4,
+            "trip_headsign": "Synthetic Terminus 2",
+            "trip_id": "S411_111_261024",
+            "trip_short_name": null
+          },
+          "origin_route_name": "411",
+          "sequence_id": 6,
+          "start_timestamp": "2026-10-24T12:10:28+02:00",
+          "usb_chargers": false,
+          "vehicle_registration_number": 7011,
+          "vehicle_type": null,
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}

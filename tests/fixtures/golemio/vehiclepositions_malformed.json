@@ -1,0 +1,72 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          14.50606,
+          50.10343
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "last_position": {
+          "bearing": 157,
+          "delay": {
+            "actual": 272,
+            "last_stop_arrival": null,
+            "last_stop_departure": null
+          },
+          "is_canceled": null,
+          "last_stop": {
+            "arrival_time": "2026-10-24T12:45:28+02:00",
+            "departure_time": "2026-10-24T12:45:28+02:00",
+            "id": "SYN000S02",
+            "sequence": 2
+          },
+          "next_stop": {
+            "arrival_time": "2026-10-24T12:47:28+02:00",
+            "departure_time": "2026-10-24T12:47:28+02:00",
+            "id": "SYN000S03",
+            "sequence": 3
+          },
+          "shape_dist_traveled": "0.850",
+          "speed": null,
+          "state_position": "at_stop",
+          "tracking": true
+        },
+        "trip": {
+          "agency_name": {
+            "real": "SYNTH CITY TRANSIT",
+            "scheduled": "SYNTH CITY TRANSIT"
+          },
+          "air_conditioned": false,
+          "cis": {
+            "line_id": null,
+            "trip_number": null
+          },
+          "gtfs": {
+            "route_id": "L000",
+            "route_short_name": "000",
+            "route_type": 0,
+            "trip_headsign": "Synthetic Terminus 1",
+            "trip_id": 12345,
+            "trip_short_name": null
+          },
+          "origin_route_name": "000",
+          "sequence_id": 1,
+          "start_timestamp": "2026-10-24T12:43:28+02:00",
+          "usb_chargers": true,
+          "vehicle_registration_number": 7000,
+          "vehicle_type": {
+            "description_cs": "tramvaj",
+            "description_en": "tram",
+            "id": 2
+          },
+          "wheelchair_accessible": true
+        }
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}
