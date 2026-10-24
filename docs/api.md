@@ -120,6 +120,10 @@ DP PRAHA (the city operator).
    identical `origin_timestamp` and coordinates: one `on_track` at stop sequence 8 or 11,
    the other `at_stop` at stop sequence 2 or 3.
    One vehicle message can therefore appear on two trips at a trip handover.
+   A later check of a single poll (2026-10-24, 854 trips) showed that the trips without a
+   registration number were exactly the rail (`route_type` 2, 87 trips) and metro
+   (`route_type` 1, 40 trips) ones; every tram, bus and trolleybus trip had one. For those
+   trips there is no vehicle key in this endpoint.
 5. **Coverage.** The public endpoint returned ~15 more trips per poll, mostly in state
    `off_track`, which never appeared in this endpoint's output.
 

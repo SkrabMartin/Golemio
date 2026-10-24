@@ -6,9 +6,8 @@ from headway.cli import NOT_IMPLEMENTED_EXIT_CODE, app
 # Wide terminal and no colour so Rich does not wrap or style the help text.
 runner = CliRunner(env={"COLUMNS": "200", "NO_COLOR": "1", "TERM": "dumb"})
 
-IMPLEMENTED = ["collect", "snapshot-gtfs"]
+IMPLEMENTED = ["collect", "snapshot-gtfs", "synth", "ingest"]
 PLACEHOLDERS = {
-    "ingest": "F4",
     "audit": "F5",
     "events": "F6",
     "metrics": "F7",

@@ -156,9 +156,49 @@ def synth(
 
 
 @app.command()
-def ingest() -> None:
+def ingest(
+    service_date: Annotated[
+        str | None, typer.Option("--date", help="Service date to ingest, YYYY-MM-DD.")
+    ] = None,
+    all_dates: Annotated[
+        bool, typer.Option("--all", help="Ingest every service date that has raw polls.")
+    ] = False,
+    archive: Annotated[
+        Path,
+        typer.Option(
+            "--archive",
+            help="Archive root holding raw/ and gtfs/; positions go to <archive>/data/.",
+        ),
+    ] = Path(),
+) -> None:
     """Parse raw snapshots into the partitioned positions dataset (layer L1)."""
-    _not_implemented("F4")
+    from datetime import date
+
+    from headway.ingest.pipeline import available_service_dates, ingest_dates, inputs_for
+
+    if (service_date is None) == (not all_dates):
+        raise typer.BadParameter("give exactly one of --date or --all")
+    inputs = inputs_for(archive, load_settings())
+    if service_date is not None:
+        try:
+            days = [date.fromisoformat(service_date)]
+        except ValueError as exc:
+            raise typer.BadParameter(f"not a date (YYYY-MM-DD): {service_date}") from exc
+    else:
+        days = available_service_dates(inputs)
+        if not days:
+            typer.echo(f"no manifest records under {inputs.manifest_dir}", err=True)
+            raise typer.Exit(code=1)
+    label = "SYNTHETIC " if inputs.synthetic else ""
+    for report in ingest_dates(days, inputs):
+        bench = report["benchmark"]
+        typer.echo(
+            f"{label}{report['service_date']}: {report['positions']} positions, "
+            f"{report['repeated_observations_dropped']} repeats dropped, "
+            f"{report['handover_duplicate_rows']} handover rows, {report['rejects']} rejects "
+            f"{report['reject_reasons'] or ''}, {report['owned_polls_at_limit']} polls at limit, "
+            f"{bench['seconds']} s"
+        )
 
 
 @app.command()

@@ -62,6 +62,20 @@ class CollectConfig(BaseModel):
     ntfy_url: str = Field(description="ntfy topic URL; empty disables notifications.")
 
 
+class IngestConfig(BaseModel):
+    """Parameters of the raw-to-positions ingest (layer L1)."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    service_day_start_min: int = Field(
+        ge=0, lt=720, description="Local minutes after midnight at which a service day begins."
+    )
+    window_before_h: float = Field(ge=0, description="Hours of polls read before a service day.")
+    window_after_h: float = Field(ge=0, description="Hours of polls read after a service day.")
+    schema_check_every: int = Field(ge=1, description="Check unknown fields on every Nth poll.")
+    parser_version: str = Field(description="Written to every row as parser_version.")
+
+
 class TimeConfig(BaseModel):
     """Time-zone handling; data is stored in UTC."""
 
@@ -83,6 +97,7 @@ class Settings(BaseSettings):
     paths: PathsConfig
     collect: CollectConfig
     gtfs: GtfsConfig
+    ingest: IngestConfig
     time: TimeConfig
 
     @classmethod

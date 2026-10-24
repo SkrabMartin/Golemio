@@ -48,7 +48,7 @@ produces real results.
 | L0 collect | Polls the API, stores raw snapshots and a manifest | Implemented and tested |
 | GTFS | Daily timetable snapshots, version per service date, time conversion | Implemented and tested |
 | Synthetic archive | Generates raw snapshots with known ground truth | Implemented and tested |
-| L1 ingest | Raw snapshots to a positions dataset | Next |
+| L1 ingest | Raw snapshots to a partitioned positions dataset, with rejects and a daily report | Implemented and tested |
 | L2 audit | Data-quality findings | Planned |
 | L3 events | Stop arrival and departure reconstruction | Planned |
 | L4 metrics | Reliability and delay propagation | Planned |
@@ -103,6 +103,43 @@ gaps, API errors, stale feeds, GPS jumps, positions off the route, silent vehicl
 duplicate records at trip handovers and a systematic bias in the API's own delay
 estimate on one route. Every parameter is in `config/synth.toml`, and the same seed
 always produces identical output.
+
+## Building the positions dataset
+
+```sh
+uv run headway ingest --all --archive synthetic   # every service date of the synthetic archive
+uv run headway ingest --date 2026-10-24           # one date of a real archive (./raw, ./gtfs)
+```
+
+Ingest turns the raw polls into one row per vehicle position report. Every service date is
+rebuilt from the raw files, so running it again gives the same output and never duplicates.
+Results go next to the archive they came from, so synthetic and real data never mix:
+
+```
+<archive>/data/
+  ORIGIN.json                                       says whether the archive is synthetic
+  positions/service_date=YYYY-MM-DD/part-0.parquet  one row per position report
+  rejects/service_date=YYYY-MM-DD/part-0.parquet    records that failed validation, with a reason
+  ingest_reports/YYYY-MM-DD.json                    counts, rejects by reason, speed and memory
+```
+
+- A trip belongs to the service day in which it starts. A service day begins at 04:30 local
+  time (a Headway convention, set in `config/default.toml`), so trips after midnight stay
+  with the previous day.
+- A report that appears in several polls (same trip, same origin time) is written once and
+  keeps the first file it came from; `seen_in_polls` counts the repeats.
+- The vehicle key is `<route type>-<registration number>`. Rail and metro have no
+  registration number in this endpoint, so their `vehicle_id` is empty. When one vehicle
+  message appears on two trips (a trip handover), both rows are kept and flagged
+  `handover_duplicate`.
+- Nothing is dropped silently: a bad feature or poll goes to `rejects/` with its reason.
+  Polls holding exactly as many vehicles as the API `limit` are flagged (`poll_at_limit`),
+  because vehicles may be missing from them.
+- Each row names the GTFS version that applies to its service date.
+
+Ingest holds one service date in memory. That is fine for the synthetic archive (about
+440 MB at its peak for one synthetic day) but real days are roughly 27 times larger in
+stored size, so a real archive would need a streaming version first.
 
 ## Collecting real data
 

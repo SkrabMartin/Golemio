@@ -35,5 +35,18 @@ ntfy_url = ""
 url = "https://data.pid.cz/PID_GTFS.zip"
 timeout_s = 300.0
 
+[ingest]
+# A service day starts at 04:30 local time, after the last night trips (about 04:20).
+# Trips that start earlier belong to the previous service day. This boundary is a Headway
+# convention chosen for the ingest, not a PID rule.
+service_day_start_min = 270
+# A service day reads polls fetched from 2 h before it until 9 h after it, so trips that
+# start early or run late are complete. Positions observed outside the window are not read.
+window_before_h = 2.0
+window_after_h = 9.0
+# Unknown-field detection is costly, so it runs on every Nth poll only.
+schema_check_every = 60
+parser_version = "v1"
+
 [time]
 local_tz = "Europe/Prague"
