@@ -1,0 +1,33 @@
+[Unit]
+Description=Headway collector: archive Golemio vehicle positions
+Documentation=https://github.com/SkrabMartin/headway/blob/main/deploy/README.md
+Wants=network-online.target time-sync.target
+After=network-online.target time-sync.target
+
+[Service]
+Type=simple
+User=headway
+Group=headway
+WorkingDirectory=/opt/headway
+# GOLEMIO_TOKEN and HEADWAY_* overrides; see collector.env.example.
+EnvironmentFile=/etc/headway/collector.env
+ExecStart=/opt/headway/.venv/bin/headway collect --config /opt/headway/config/default.toml
+Restart=always
+RestartSec=10
+# SIGTERM lets the collector finish the current write and flush the manifest.
+KillSignal=SIGTERM
+TimeoutStopSec=60
+
+# Hardening: the collector only needs to write to the data directory.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/srv/headway
+
+[Install]
+WantedBy=multi-user.target
