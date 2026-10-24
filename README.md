@@ -57,7 +57,9 @@ collecting data and is read exclusively from the `GOLEMIO_TOKEN` environment var
 - Static timetable: [PID GTFS](https://pid.cz/o-systemu/opendata/) published by ROPID
   under CC BY 4.0.
 
-Raw data is not redistributed in this repository.
+What the vehicle-positions API actually returns, and where it differs from its
+specification, is documented in [docs/api.md](docs/api.md). Raw data is not redistributed
+in this repository; test fixtures are synthetic and mirror the structure of real responses.
 
 ## License
 
