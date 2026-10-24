@@ -1,0 +1,14 @@
+# Default Headway configuration.
+# Override any value with an environment variable: HEADWAY_<SECTION>__<KEY>,
+# for example HEADWAY_COLLECT__INTERVAL_S=30.
+# The Golemio API token is never configured here; it is read only from GOLEMIO_TOKEN.
+
+[paths]
+data_dir = "data"
+raw_dir = "raw"
+
+[collect]
+interval_s = 20
+
+[time]
+local_tz = "Europe/Prague"
