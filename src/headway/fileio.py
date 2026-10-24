@@ -12,11 +12,13 @@ def tmp_path_for(path: Path) -> Path:
     return path.with_name(f"{path.name}.{os.getpid()}{TMP_SUFFIX}")
 
 
-def write_atomic(path: Path, data: bytes) -> None:
+def write_atomic(path: Path, data: bytes, *, fsync: bool = True) -> None:
     """Write ``data`` to ``path`` so that readers never see a partial file.
 
     The data goes to a temporary file in the same directory, is flushed to disk and then
-    renamed over the target. On any error the temporary file is removed.
+    renamed over the target. On any error the temporary file is removed. ``fsync=False``
+    skips forcing the data to disk (still atomic, but not durable across a power cut);
+    only bulk generators that can simply be re-run use it.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = tmp_path_for(path)
@@ -24,7 +26,8 @@ def write_atomic(path: Path, data: bytes) -> None:
         with tmp.open("wb") as f:
             f.write(data)
             f.flush()
-            os.fsync(f.fileno())
+            if fsync:
+                os.fsync(f.fileno())
         os.replace(tmp, path)
     except BaseException:
         with contextlib.suppress(FileNotFoundError):

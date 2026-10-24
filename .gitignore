@@ -28,3 +28,6 @@ htmlcov/
 
 # GTFS snapshots (data, not code)
 /gtfs/
+
+# Generated synthetic archive (headway synth)
+/synthetic/

@@ -7,6 +7,7 @@ they are implemented.
 
 import asyncio
 import signal
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated, NoReturn
 
@@ -104,6 +105,54 @@ def snapshot_gtfs(
         )
     else:
         typer.echo(f"unchanged ({result.sha256[:12]}, {result.bytes} bytes); nothing stored")
+
+
+@app.command()
+def synth(
+    out: Annotated[
+        Path | None, typer.Option("--out", help="Output directory (default from config).")
+    ] = None,
+    days: Annotated[int | None, typer.Option("--days", help="Override the number of days.")] = None,
+    hours: Annotated[
+        float | None, typer.Option("--hours", help="Only generate this many hours of polls.")
+    ] = None,
+    seed: Annotated[int | None, typer.Option("--seed", help="Override the random seed.")] = None,
+    start_at: Annotated[
+        datetime | None,
+        typer.Option("--start-at", help="Start of the polled window, UTC (with --hours)."),
+    ] = None,
+    synth_config: Annotated[
+        Path, typer.Option("--synth-config", help="Generator parameters (TOML).")
+    ] = Path("config/synth.toml"),
+) -> None:
+    """Generate a SYNTHETIC raw archive with known ground truth (for demos and testing)."""
+    import time
+
+    from headway.synth import generate, load_synth_config
+
+    cfg = load_synth_config(synth_config)
+    updates: dict[str, object] = {}
+    if days is not None:
+        updates["days"] = days
+    if seed is not None:
+        updates["seed"] = seed
+    if updates:
+        cfg = cfg.model_validate({**cfg.model_dump(), **updates})
+    target = out or cfg.output_dir
+    started = time.perf_counter()
+    try:
+        when = start_at.replace(tzinfo=UTC) if start_at and start_at.tzinfo is None else start_at
+        result = generate(cfg, target, start_at=when, hours=hours)
+    except FileExistsError as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from exc
+    seconds = time.perf_counter() - started
+    typer.echo(
+        f"SYNTHETIC archive in {target}: {result.polls} polls, {result.files} files, "
+        f"{result.trips} trips, {result.defects} planted defects, "
+        f"{result.stored_bytes / 1e6:.1f} MB stored ({result.raw_bytes / 1e6:.1f} MB raw), "
+        f"{seconds:.1f} s"
+    )
 
 
 @app.command()

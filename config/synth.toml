@@ -1,0 +1,75 @@
+# Parameters of the synthetic archive generator (headway synth).
+# Everything generated from these values is SYNTHETIC: it demonstrates the pipeline and
+# lets each stage be checked against known truth. It says nothing about real Prague.
+# Values marked "probe" mimic what the real API showed in the F1 probe (docs/api.md).
+
+seed = 20261024
+# 6 weeks starting on a Monday; includes the end of daylight saving time (2026-10-25).
+start_date = "2026-09-28"
+days = 42
+poll_interval_s = 20                       # same as the real collector
+output_dir = "synthetic"
+
+[network]
+tram_routes = 3
+bus_routes = 3
+regional_bus_share = 0.5                   # share of bus routes run by the regional operator
+stops_per_route = [10, 16]
+stop_spacing_m = [350, 750]
+shape_step_m = 100
+max_turn_deg = 12
+origin_lat = 50.0755                       # routes start within this radius of the centre
+origin_lon = 14.4378
+radius_m = 5000
+
+[timetable]
+first_departure = "04:40:00"
+last_departure = "28:20:00"                # GTFS time: night service until 04:20 next day
+headway_min = { peak = 6, day = 10, evening = 15, weekend = 12, night = 30 }
+peak_hours = [[6, 9], [15, 18]]           # local time, [from, to)
+evening_from_hour = 20
+night_hours = [0, 5]                       # local time, [from, to): night headway
+speed_kmh = { tram = 17.0, bus = 21.0 }   # scheduled running speed
+timing_point_every = 4                     # every n-th stop has a 1-minute scheduled dwell
+padded_segments_per_route = 1              # +60 s schedule padding: absorbs delay
+layover_min = 4                            # minimum turnaround at a terminal
+# A second timetable version, valid from this day of the period (0 = none).
+timetable_change_day = 22
+timetable_change_shift_min = 2
+
+[delay]
+initial_delay_s = { mean = 20.0, sd = 40.0 }
+segment_increment_s = { mean = 4.0, sd = 12.0 }
+peak_increment_factor = 2.5                # mean increment multiplier in peak hours
+bottlenecks_per_route = 1                  # segments that add delay systematically
+bottleneck_increment_s = 35.0
+dwell_s = { mean = 22.0, sd = 10.0 }
+min_turnaround_s = 90
+
+[reporting]
+report_interval_s = [5.0, 30.0]            # vehicle message spacing, uniform
+publish_lag_s = 6.0                        # mean of an exponential processing lag
+long_lag_probability = 0.01                # probe: p99 age ~ 160-190 s, max ~290 s
+long_lag_s = [60.0, 280.0]
+linger_s = 30.0                            # a finished trip stays in the feed this long
+drop_after_s = 300.0                       # ASSUMPTION: silent vehicles vanish after this
+gps_noise_m = 6.0
+golemio_delay_noise_s = 8.0
+golemio_delay_bias_s = 45.0                # systematic bias planted on one route
+regional_delay_rounding_s = 60             # probe: many regional delays are multiples of 60
+
+[defects]
+# Counts are per day (Poisson means).
+collection_gaps = 0.4
+collection_gap_min = [3.0, 25.0]
+api_errors = 1.0
+stale_episodes = 0.3
+stale_polls = [3, 8]
+gps_jumps = 4.0
+gps_jump_m = [800.0, 3000.0]
+off_shape = 3.0
+off_shape_m = [60.0, 180.0]                 # probe: off_track (200 m+) never appeared here
+off_shape_min = [1.0, 3.0]
+silent_trips = 2.0
+silent_min = [6.0, 20.0]
+handover_duplicate_probability = 0.15
