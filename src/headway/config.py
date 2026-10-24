@@ -29,6 +29,7 @@ class PathsConfig(BaseModel):
 
     data_dir: Path
     raw_dir: Path
+    manifest_dir: Path
 
 
 class CollectConfig(BaseModel):
@@ -36,7 +37,19 @@ class CollectConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    url: str = Field(description="Vehicle-positions endpoint.")
+    params: dict[str, str] = Field(description="Query parameters sent with every poll.")
     interval_s: int = Field(gt=0, description="Polling interval in seconds.")
+    timeout_s: float = Field(gt=0, description="Per-request timeout in seconds.")
+    max_attempts: int = Field(ge=1, description="Attempts per tick, including the first.")
+    backoff_initial_s: float = Field(ge=0, description="First retry delay in seconds.")
+    backoff_max_s: float = Field(ge=0, description="Upper bound of a retry delay.")
+    manifest_flush_s: int = Field(gt=0, le=300, description="Max seconds between flushes.")
+    stale_after_identical: int = Field(ge=2, description="Identical bodies that mean stale.")
+    error_streak_alert: int = Field(ge=1, description="Failed ticks in a row that alert.")
+    gap_factor: float = Field(gt=1, description="Gap = no success for factor x interval.")
+    heartbeat_interval_s: int = Field(gt=0, description="Seconds between heartbeats.")
+    ntfy_url: str = Field(description="ntfy topic URL; empty disables notifications.")
 
 
 class TimeConfig(BaseModel):

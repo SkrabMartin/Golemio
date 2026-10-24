@@ -6,9 +6,28 @@
 [paths]
 data_dir = "data"
 raw_dir = "raw"
+manifest_dir = "raw/manifest"
 
 [collect]
+# Primary source, see docs/api.md. limit defaults to 100 upstream; 10000 is the documented max.
+url = "https://api.golemio.cz/v2/vehiclepositions"
+params = { limit = "10000" }
 interval_s = 20
+timeout_s = 10.0
+# Retries within one tick; never beyond the start of the next tick.
+max_attempts = 3
+backoff_initial_s = 1.0
+backoff_max_s = 8.0
+# Manifest rows are buffered in memory and written at least this often.
+manifest_flush_s = 300
+# Health thresholds.
+stale_after_identical = 3
+error_streak_alert = 5
+gap_factor = 2.0
+heartbeat_interval_s = 3600
+# Optional ntfy topic URL for heartbeats and alerts; empty disables it.
+# Set it via HEADWAY_COLLECT__NTFY_URL in the deployment env file, not here.
+ntfy_url = ""
 
 [time]
 local_tz = "Europe/Prague"

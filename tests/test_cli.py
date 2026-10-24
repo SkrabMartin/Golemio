@@ -6,8 +6,8 @@ from headway.cli import NOT_IMPLEMENTED_EXIT_CODE, app
 # Wide terminal and no colour so Rich does not wrap or style the help text.
 runner = CliRunner(env={"COLUMNS": "200", "NO_COLOR": "1", "TERM": "dumb"})
 
+IMPLEMENTED = ["collect"]
 PLACEHOLDERS = {
-    "collect": "F2",
     "snapshot-gtfs": "F3",
     "ingest": "F4",
     "audit": "F5",
@@ -23,7 +23,7 @@ PLACEHOLDERS = {
 def test_help_lists_all_subcommands() -> None:
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0, result.output
-    for command in PLACEHOLDERS:
+    for command in [*IMPLEMENTED, *PLACEHOLDERS]:
         assert command in result.output
 
 

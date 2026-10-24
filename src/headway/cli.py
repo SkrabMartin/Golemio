@@ -5,9 +5,15 @@ phase are registered already, so the CLI surface is stable, but exit with code 2
 they are implemented.
 """
 
-from typing import NoReturn
+import asyncio
+import signal
+from pathlib import Path
+from typing import Annotated, NoReturn
 
 import typer
+
+from headway import jsonlog
+from headway.config import DEFAULT_CONFIG_PATH, TOKEN_ENV_VAR, golemio_token, load_settings
 
 app = typer.Typer(
     name="headway",
@@ -25,10 +31,50 @@ def _not_implemented(phase: str) -> NoReturn:
     raise typer.Exit(code=NOT_IMPLEMENTED_EXIT_CODE)
 
 
+ConfigOption = Annotated[
+    Path, typer.Option("--config", help="TOML configuration file.", show_default=True)
+]
+
+
+def _install_stop_handlers(stop: asyncio.Event) -> None:
+    loop = asyncio.get_running_loop()
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        try:
+            loop.add_signal_handler(sig, stop.set)
+        except (NotImplementedError, RuntimeError):  # e.g. Windows event loops
+            signal.signal(sig, lambda *_: loop.call_soon_threadsafe(stop.set))
+
+
 @app.command()
-def collect() -> None:
+def collect(
+    once: Annotated[bool, typer.Option("--once", help="Poll a single time and exit.")] = False,
+    config: ConfigOption = DEFAULT_CONFIG_PATH,
+) -> None:
     """Poll Golemio vehicle positions and store raw snapshots (layer L0)."""
-    _not_implemented("F2")
+    from headway.collect import Collector, ManifestWriter
+
+    jsonlog.configure()
+    settings = load_settings(config)
+    token = golemio_token()
+    if token is None:
+        typer.echo(f"{TOKEN_ENV_VAR} is not set", err=True)
+        raise typer.Exit(code=1)
+    collector = Collector(
+        cfg=settings.collect,
+        raw_dir=settings.paths.raw_dir,
+        manifest=ManifestWriter(settings.paths.manifest_dir),
+        token=token,
+    )
+    if once:
+        record = asyncio.run(collector.once())
+        raise typer.Exit(code=0 if record.ok else 1)
+
+    async def _run() -> None:
+        stop = asyncio.Event()
+        _install_stop_handlers(stop)
+        await collector.run(stop)
+
+    asyncio.run(_run())
 
 
 @app.command("snapshot-gtfs")

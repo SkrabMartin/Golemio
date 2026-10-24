@@ -12,6 +12,7 @@ tests/fixtures/golemio_real/
 
 # Python
 __pycache__/
+.python/
 *.py[cod]
 .venv/
 build/
