@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Nightly backup of the Headway raw archive, plus a disk-usage check.
 #
-# Copies DATA_DIR/raw/ to BACKUP_DEST/raw/ with rsync. The archive is append-only, so the
-# copy never deletes anything at the destination. Exits non-zero (and alerts via ntfy if
-# NTFY_URL is set) when rsync fails or the data filesystem is fuller than DISK_ALERT_PCT.
+# Copies DATA_DIR/raw/ and DATA_DIR/gtfs/ to BACKUP_DEST with rsync. The archive is
+# append-only, so the copy never deletes anything at the destination. Exits non-zero (and
+# alerts via ntfy if NTFY_URL is set) when rsync fails or the data filesystem is fuller
+# than DISK_ALERT_PCT.
 set -euo pipefail
 
 : "${BACKUP_DEST:?BACKUP_DEST must be set (see backup.env.example)}"
@@ -31,13 +32,16 @@ if (( usage > DISK_ALERT_PCT )); then
     status=1
 fi
 
-if rsync -a --partial --exclude '*.tmp' "$DATA_DIR/raw/" "$BACKUP_DEST/raw/"; then
-    log info "backup to $BACKUP_DEST finished"
-else
-    code=$?
-    log error "rsync failed with exit code $code"
-    notify "backup failed" "$(hostname): rsync to $BACKUP_DEST failed (exit $code)"
-    status=1
-fi
+for part in raw gtfs; do
+    [[ -d "$DATA_DIR/$part" ]] || continue
+    if rsync -a --partial --exclude '*.tmp' "$DATA_DIR/$part/" "$BACKUP_DEST/$part/"; then
+        log info "backup of $part to $BACKUP_DEST finished"
+    else
+        code=$?
+        log error "rsync of $part failed with exit code $code"
+        notify "backup failed" "$(hostname): rsync of $part to $BACKUP_DEST failed (exit $code)"
+        status=1
+    fi
+done
 
 exit "$status"

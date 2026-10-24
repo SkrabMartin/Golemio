@@ -93,7 +93,28 @@ systemctl status headway-collect.service
 journalctl -u headway-collect.service -f     # one "poll" line every 20 s
 ```
 
-## 7. Set up backups and disk monitoring
+## 7. Snapshot the static timetable every morning
+
+ROPID publishes the PID timetable (`PID_GTFS.zip`, CC BY 4.0) every day at about 04:00
+Prague time. `headway-gtfs.timer` downloads it at 05:00 Prague time and stores it only if
+its content changed, as `/srv/headway/gtfs/PID_GTFS_<date>_<sha12>.zip`, plus a registry
+`gtfs_versions.parquet` that later steps use to pick the timetable valid for each day.
+
+```sh
+sudo mkdir -p /srv/headway/gtfs && sudo chown headway:headway /srv/headway/gtfs
+sudo cp /opt/headway/deploy/headway-gtfs.{service,timer} /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now headway-gtfs.timer
+sudo systemctl start headway-gtfs.service      # take the first snapshot now
+journalctl -u headway-gtfs.service -n 20       # "stored ..." or "unchanged ..."
+ls -lh /srv/headway/gtfs
+```
+
+The size of the zip and how often its content changes have not been measured yet. If it
+changes every day, each day adds one full copy, so check `du -sh /srv/headway/gtfs` after
+a week and add it to the storage estimate above.
+
+## 8. Set up backups and disk monitoring
 
 ```sh
 sudo cp /opt/headway/deploy/backup.env.example /etc/headway/backup.env
@@ -108,7 +129,7 @@ journalctl -u headway-backup.service -n 20
 
 For an SSH destination, give the `headway` user a key (`sudo -u headway ssh-keygen`), add
 it to the target host and connect once (`sudo -u headway ssh <host>`) to accept the host
-key. The backup never deletes files at the destination.
+key. The backup copies `raw/` and `gtfs/` and never deletes files at the destination.
 
 The backup job also checks disk usage every night and alerts above `DISK_ALERT_PCT`
 (default 85 %). To check it by hand:
@@ -119,7 +140,7 @@ du -sh /srv/headway/raw
 du -sh /srv/headway/raw/$(date -u +%Y)/$(date -u +%m)/*   # per day
 ```
 
-## 8. Check that it keeps working
+## 9. Check that it keeps working
 
 - `journalctl -u headway-collect.service --since today | grep -c '"msg": "poll"'` should
   grow by about 180 per hour.

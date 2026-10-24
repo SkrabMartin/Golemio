@@ -1,0 +1,21 @@
+[Unit]
+Description=Headway: snapshot the static PID GTFS feed
+Documentation=https://github.com/SkrabMartin/headway/blob/main/deploy/README.md
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=headway
+Group=headway
+WorkingDirectory=/opt/headway
+# Uses HEADWAY_PATHS__GTFS_DIR; no API key is needed for the GTFS download.
+EnvironmentFile=/etc/headway/collector.env
+ExecStart=/opt/headway/.venv/bin/headway snapshot-gtfs --config /opt/headway/config/default.toml
+Nice=10
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/srv/headway

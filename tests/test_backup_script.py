@@ -46,13 +46,13 @@ def test_success(tmp_path: Path) -> None:
     assert code == 0, out
     assert "--exclude *.tmp" in calls
     assert "--delete" not in calls
-    assert "backup to" in out
+    assert "backup of raw to" in out
 
 
 def test_rsync_failure_is_reported(tmp_path: Path) -> None:
     code, out, _ = _run(tmp_path, rsync_exit=23, alert_pct=100)
     assert code == 1
-    assert "rsync failed with exit code 23" in out
+    assert "rsync of raw failed with exit code 23" in out
 
 
 def test_disk_usage_alert(tmp_path: Path) -> None:

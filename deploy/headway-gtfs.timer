@@ -1,0 +1,10 @@
+[Unit]
+Description=Snapshot the PID GTFS feed every morning (published around 04:00 Prague time)
+
+[Timer]
+OnCalendar=*-*-* 05:00:00 Europe/Prague
+RandomizedDelaySec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
