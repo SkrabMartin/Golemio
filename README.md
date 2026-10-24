@@ -4,7 +4,8 @@ A reliability lab for Prague public transport (PID).
 
 Prague publishes live vehicle positions through the [Golemio](https://golemio.cz) data
 platform, but only the present moment: there is no public archive to ask how reliable a
-tram line was last Tuesday morning. Headway builds that history itself and studies it:
+tram line was last Tuesday morning. Headway is a pipeline that builds that history and
+studies it:
 
 - **Collect** raw vehicle-position snapshots unmodified, with checksums and a manifest.
 - **Reconstruct** stop-level arrival and departure times from positions, with an
@@ -19,14 +20,45 @@ tram line was last Tuesday morning. Headway builds that history itself and studi
 
 Headway is a historical research project, not a journey planner or a live service.
 
+## Real data and synthetic data
+
+Headway is a **proof of concept**. The collector is fully implemented, but it is not
+running anywhere, because a meaningful archive needs a machine that polls the API
+around the clock for weeks.
+
+- **What is real:** the behaviour of the Golemio API. It was probed directly, and every
+  field, null rate and discrepancy between the API's specification and its responses is
+  documented in [docs/api.md](docs/api.md). The data contract in
+  `src/headway/contracts/golemio_v1.py` is written against those real responses.
+- **What is synthetic:** the archive the analysis runs on. A generator (next on the
+  roadmap below) produces raw snapshots in exactly the collector's file format, from a
+  simulated network whose true delays, gaps and data defects are known. Because the truth
+  is known, every stage can be checked: does the audit find the planted defects, does the
+  reconstruction recover the true arrival times, do the prediction intervals cover what
+  they claim?
+
+Results computed from synthetic data show that the methods work. They are not findings
+about Prague, and they are labelled as synthetic wherever they appear. Point the same
+pipeline at a real archive (see [Collecting real data](#collecting-real-data)) and it
+produces real results.
+
 ## Status
 
-Early development. The project skeleton, configuration and quality gates are in place;
-pipeline stages are added layer by layer.
+| Layer | What it does | State |
+|---|---|---|
+| L0 collect | Polls the API, stores raw snapshots and a manifest | Implemented and tested |
+| GTFS | Daily timetable snapshots, version per service date, time conversion | Implemented and tested |
+| Synthetic archive | Generates raw snapshots with known ground truth | Next |
+| L1 ingest | Raw snapshots to a positions dataset | Planned |
+| L2 audit | Data-quality findings | Planned |
+| L3 events | Stop arrival and departure reconstruction | Planned |
+| L4 metrics | Reliability and delay propagation | Planned |
+| L5 model | Split, baselines, nowcasts, conformal intervals | Planned |
+| L6 export | Static web map, Streamlit app, report | Planned |
 
 ## Quick start
 
-Requires [uv](https://docs.astral.sh/uv/).
+Requires [uv](https://docs.astral.sh/uv/). No API key is needed.
 
 ```sh
 uv sync
@@ -44,11 +76,32 @@ uv run pytest
 
 Tests run fully offline and never call the Golemio API.
 
+## Collecting real data
+
+To run Headway on real data you need a free Golemio API key from
+<https://api.golemio.cz/api-keys>. The key is read only from the `GOLEMIO_TOKEN`
+environment variable and is never written to disk.
+
+**Try a single poll** (any machine):
+
+```sh
+export GOLEMIO_TOKEN=...          # PowerShell: $env:GOLEMIO_TOKEN = "..."
+uv run headway collect --once     # writes raw/YYYY/MM/DD/*.json.gz and raw/manifest/
+uv run headway snapshot-gtfs      # downloads the current timetable into gtfs/
+```
+
+**Build an archive** by running `uv run headway collect` continuously. It polls every
+20 seconds, aligned to the clock, retries failures and stops cleanly on `Ctrl+C` or
+`SIGTERM`. Plan for about **370 MB of compressed data per day**. Analyses need several
+weeks of uninterrupted data, so use an always-on machine: [deploy/README.md](deploy/README.md)
+is a step-by-step guide for a Raspberry Pi or any Linux server. It covers a hardened
+systemd service, the daily timetable snapshot, nightly backups, disk-usage alerts and
+optional phone notifications.
+
 ## Configuration
 
 Defaults live in `config/default.toml`. Any value can be overridden with an environment
-variable such as `HEADWAY_COLLECT__INTERVAL_S=30`. A Golemio API key is only needed for
-collecting data and is read exclusively from the `GOLEMIO_TOKEN` environment variable.
+variable such as `HEADWAY_COLLECT__INTERVAL_S=30`.
 
 ## Data sources
 
@@ -57,9 +110,8 @@ collecting data and is read exclusively from the `GOLEMIO_TOKEN` environment var
 - Static timetable: [PID GTFS](https://pid.cz/o-systemu/opendata/) published by ROPID
   under CC BY 4.0.
 
-What the vehicle-positions API actually returns, and where it differs from its
-specification, is documented in [docs/api.md](docs/api.md). Raw data is not redistributed
-in this repository; test fixtures are synthetic and mirror the structure of real responses.
+No raw Golemio data is redistributed in this repository. Test fixtures are synthetic and
+mirror the structure of real responses.
 
 ## License
 
