@@ -1,0 +1,7 @@
+stop_id,stop_name,stop_lat,stop_lon,location_type,parent_station,wheelchair_boarding
+S1,Alpha,50.0800,14.4000,0,,1
+S2,Beta,50.0820,14.4100,0,,1
+S3,Gamma,50.0840,14.4200,0,,0
+S4,Delta,50.0900,14.4300,0,,1
+S5,Epsilon,50.0950,14.4400,0,,
+S6,Zeta,50.1000,14.4500,0,,1

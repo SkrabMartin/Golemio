@@ -1,0 +1,4 @@
+route_id,service_id,trip_id,trip_headsign,direction_id,shape_id,wheelchair_accessible
+L1,WD,T1_WD_0800,Gamma,0,SH1,1
+L1,WE,T1_WE_2450,Gamma,0,SH1,1
+L2,WD,T2_WD_0815,Zeta,1,SH2,2

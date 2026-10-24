@@ -78,9 +78,32 @@ def collect(
 
 
 @app.command("snapshot-gtfs")
-def snapshot_gtfs() -> None:
+def snapshot_gtfs(
+    rebuild_registry: Annotated[
+        bool,
+        typer.Option("--rebuild-registry", help="Re-hash all stored zips instead of downloading."),
+    ] = False,
+    config: ConfigOption = DEFAULT_CONFIG_PATH,
+) -> None:
     """Archive the current PID static GTFS feed, keyed by content hash."""
-    _not_implemented("F3")
+    from headway import gtfs
+
+    jsonlog.configure()
+    settings = load_settings(config)
+    gtfs_dir = settings.paths.gtfs_dir
+    if rebuild_registry:
+        versions = gtfs.rebuild_registry(gtfs_dir)
+        typer.echo(f"registry rebuilt: {len(versions)} snapshot(s)")
+        return
+    result = gtfs.snapshot_gtfs(settings.gtfs.url, gtfs_dir, timeout_s=settings.gtfs.timeout_s)
+    if result.stored and result.version is not None:
+        v = result.version
+        typer.echo(
+            f"stored {v.path} ({result.bytes} bytes), "
+            f"covers {v.feed_start_date} to {v.feed_end_date}"
+        )
+    else:
+        typer.echo(f"unchanged ({result.sha256[:12]}, {result.bytes} bytes); nothing stored")
 
 
 @app.command()

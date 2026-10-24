@@ -30,6 +30,16 @@ class PathsConfig(BaseModel):
     data_dir: Path
     raw_dir: Path
     manifest_dir: Path
+    gtfs_dir: Path
+
+
+class GtfsConfig(BaseModel):
+    """Static GTFS snapshots."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    url: str = Field(description="URL of the static GTFS zip.")
+    timeout_s: float = Field(gt=0, description="Download timeout in seconds.")
 
 
 class CollectConfig(BaseModel):
@@ -72,6 +82,7 @@ class Settings(BaseSettings):
 
     paths: PathsConfig
     collect: CollectConfig
+    gtfs: GtfsConfig
     time: TimeConfig
 
     @classmethod

@@ -7,6 +7,7 @@
 data_dir = "data"
 raw_dir = "raw"
 manifest_dir = "raw/manifest"
+gtfs_dir = "gtfs"
 
 [collect]
 # Primary source, see docs/api.md. limit defaults to 100 upstream; 10000 is the documented max.
@@ -28,6 +29,11 @@ heartbeat_interval_s = 3600
 # Optional ntfy topic URL for heartbeats and alerts; empty disables it.
 # Set it via HEADWAY_COLLECT__NTFY_URL in the deployment env file, not here.
 ntfy_url = ""
+
+[gtfs]
+# Static PID timetable published by ROPID (CC BY 4.0).
+url = "https://data.pid.cz/PID_GTFS.zip"
+timeout_s = 300.0
 
 [time]
 local_tz = "Europe/Prague"

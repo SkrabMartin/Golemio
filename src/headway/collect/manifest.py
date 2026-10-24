@@ -14,7 +14,7 @@ from typing import Any
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from headway.collect.storage import write_atomic
+from headway.fileio import write_atomic
 
 MANIFEST_SCHEMA = pa.schema(
     [
