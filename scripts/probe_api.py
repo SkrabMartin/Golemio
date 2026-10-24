@@ -13,13 +13,16 @@ What it does:
 3. Prints and saves a summary of the observed fields: JSON types, occurrence and null
    counts, and the number of records per poll.
 
-The default endpoint URLs are unverified assumptions. Confirm them against the official
-documentation (https://api.golemio.cz/pid/docs/openapi/) and override them with ``--url``
-and ``--gtfsrt-url`` if they differ.
+The default URLs and parameters follow the official OpenAPI specification
+(https://api.golemio.cz/docs/static/vp-output-gateway/openapi.json, rendered at
+https://api.golemio.cz/pid/docs/openapi/), checked on 2026-10-24. ``limit`` defaults to 100
+there, which truncates the fleet, so the probe requests the documented maximum of 10000.
 
 Usage::
 
-    uv run python scripts/probe_api.py --out probe_out
+    uv run python scripts/probe_api.py --out probe_out/run2
+    uv run python scripts/probe_api.py --out probe_out/public --no-default-params
+        --url https://api.golemio.cz/v2/public/vehiclepositions    (one line)
 """
 
 import argparse
@@ -36,13 +39,15 @@ import httpx
 
 from headway.config import golemio_token
 
-# Unverified defaults: see the module docstring.
+# Defaults taken from the OpenAPI specification: see the module docstring.
 DEFAULT_JSON_URL = "https://api.golemio.cz/v2/vehiclepositions"
+DEFAULT_JSON_PARAMS = {"limit": "10000"}
 DEFAULT_GTFSRT_URLS = (
     "https://api.golemio.cz/v2/vehiclepositions/gtfsrt/vehicle_positions.pb",
     "https://api.golemio.cz/v2/vehiclepositions/gtfsrt/trip_updates.pb",
     "https://api.golemio.cz/v2/vehiclepositions/gtfsrt/alerts.pb",
     "https://api.golemio.cz/v2/vehiclepositions/gtfsrt/pid_feed.pb",
+    "https://api.golemio.cz/v2/vehiclepositions/gtfsrt/pid_display_alerts.pb",
 )
 
 AUTH_HEADER = "X-Access-Token"
@@ -221,7 +226,8 @@ def run(args: argparse.Namespace) -> int:
         return 1
     out.mkdir(parents=True, exist_ok=True)
 
-    params = _parse_params(args.param)
+    defaults = {} if args.no_default_params else DEFAULT_JSON_PARAMS
+    params = defaults | _parse_params(args.param)
     headers = {AUTH_HEADER: token.get_secret_value()}
     stats: dict[str, FieldStats] = {}
     records_per_poll: list[int] = []
@@ -305,6 +311,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--url", default=DEFAULT_JSON_URL, help="JSON vehicle-positions URL.")
     parser.add_argument(
         "--param", action="append", default=[], metavar="KEY=VALUE", help="Query parameter."
+    )
+    parser.add_argument(
+        "--no-default-params",
+        action="store_true",
+        help=f"Do not send the default query parameters {DEFAULT_JSON_PARAMS}.",
     )
     parser.add_argument("--polls", type=int, default=3, help="Number of JSON polls.")
     parser.add_argument("--interval", type=float, default=30.0, help="Seconds between polls.")

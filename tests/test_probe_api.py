@@ -77,6 +77,12 @@ def test_field_stats_and_summary() -> None:
     assert "props.delay" in probe.format_summary(summary)
 
 
+def test_default_params_request_documented_maximum() -> None:
+    assert probe.DEFAULT_JSON_PARAMS == {"limit": "10000"}
+    args = probe.build_parser().parse_args(["--no-default-params"])
+    assert args.no_default_params is True
+
+
 def test_missing_token_aborts(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.delenv("GOLEMIO_TOKEN", raising=False)
     args = probe.build_parser().parse_args(["--out", str(tmp_path / "out")])
