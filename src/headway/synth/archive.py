@@ -144,19 +144,33 @@ def _trip_defects(
     if not runs:
         return found, truth
 
-    def pick() -> tuple[TripRun, float]:
+    used: set[tuple[str, str]] = set()
+
+    def pick(kind: str) -> tuple[TripRun, float] | None:
+        # A trip carries at most one defect of each kind: a second one would replace the
+        # first in the data while staying in the truth table.
         run = runs[int(rng.integers(len(runs)))]
-        return run, float(rng.uniform(run.true_dep[0], run.true_arr[-1]))
+        t = float(rng.uniform(run.true_dep[0], run.true_arr[-1]))
+        if (kind, run.trip_id) in used:
+            return None
+        used.add((kind, run.trip_id))
+        return run, t
 
     for _ in range(int(rng.poisson(d.gps_jumps))):
-        run, t = pick()
+        picked = pick("gps_jump")
+        if picked is None:
+            continue
+        run, t = picked
         m = float(rng.uniform(*d.gps_jump_m))
         found[run.trip_id] = replace(
             found.get(run.trip_id, TripDefects()), gps_jump_at=t, gps_jump_m=m
         )
         truth.append(_defect("gps_jump", t, t, run, f"{m:.0f} m"))
     for _ in range(int(rng.poisson(d.off_shape))):
-        run, t = pick()
+        picked = pick("off_shape")
+        if picked is None:
+            continue
+        run, t = picked
         m = float(rng.uniform(*d.off_shape_m))
         end = t + 60 * float(rng.uniform(*d.off_shape_min))
         found[run.trip_id] = replace(
@@ -164,13 +178,30 @@ def _trip_defects(
         )
         truth.append(_defect("off_shape", t, end, run, f"{m:.0f} m"))
     for _ in range(int(rng.poisson(d.silent_trips))):
-        run, t = pick()
+        picked = pick("silent_trip")
+        if picked is None:
+            continue
+        run, t = picked
         end = t + 60 * float(rng.uniform(*d.silent_min))
         found[run.trip_id] = replace(
             found.get(run.trip_id, TripDefects()), silent_from=t, silent_to=end
         )
         truth.append(_defect("silent_trip", t, end, run, f"{(end - t) / 60:.1f} min"))
     return found, truth
+
+
+def _overlaps_window(
+    defect: dict[str, Any], window_from: float, window_to: float, margin_s: float
+) -> bool:
+    """True if the defect is active at some time in the polled window.
+
+    A defect that ends just before the first poll can still be in the data: the first poll
+    shows messages up to ``margin_s`` old.
+    """
+    return bool(
+        defect["start"].timestamp() < window_to
+        and defect["end"].timestamp() >= window_from - margin_s
+    )
 
 
 def _defect(
@@ -384,6 +415,8 @@ def generate(
         )
     ]
     handovers: dict[str, str] = {}  # next trip id -> previous trip id, for duplicates
+    predecessors: set[str] = set()  # previous trips of planned handovers
+    retired: dict[str, _Active] = {}  # predecessors that have left the feed
     pending: list[tuple[float, TripRun, TripDefects]] = []
     simulated: set[date] = set()
     active: list[_Active] = []
@@ -413,6 +446,7 @@ def generate(
                     for a, b in itertools.pairwise(block):
                         if rng.random() < cfg.defects.handover_duplicate_probability:
                             handovers[b.trip_id] = a.trip_id
+                            predecessors.add(a.trip_id)
                 pending.sort(key=lambda p: p[0], reverse=True)
             day += timedelta(days=1)
 
@@ -428,7 +462,9 @@ def generate(
             plan, truth = _collector_plan(world, utc_day, day_ticks)
             collector[utc_day] = plan
             defects.extend(
-                row for row in truth if window_from <= row["start"].timestamp() < window_to
+                row
+                for row in truth
+                if _overlaps_window(row, window_from, window_to, cfg.reporting.drop_after_s)
             )
         plan = collector[utc_day]
 
@@ -436,7 +472,13 @@ def generate(
         while pending and pending[-1][0] <= tick:
             _, run, trip_defect = pending.pop()
             active.append(_Active(run, make_reports(cfg.seed, run, cfg.reporting, trip_defect)))
-        active = [a for a in active if tick <= a.reports.published[-1] + cfg.reporting.linger_s]
+        staying = []
+        for a in active:
+            if tick <= a.reports.published[-1] + cfg.reporting.linger_s:
+                staying.append(a)
+            elif a.run.trip_id in predecessors:
+                retired[a.run.trip_id] = a
+        active = staying
 
         if any(a <= tick <= b for a, b in plan.gaps):
             continue  # collector down: no request, no manifest row
@@ -466,7 +508,7 @@ def generate(
             body = previous_body
         else:
             body = _render_poll(
-                renderer, active, tick, cfg.reporting.drop_after_s, handovers, defects
+                renderer, active, tick, cfg.reporting.drop_after_s, handovers, retired, defects
             )
         previous_body = body
         fetched = tick + float(jitter.uniform(0.002, 0.05))
@@ -481,7 +523,8 @@ def generate(
     defects = [
         d
         for d in defects
-        if d["kind"] == "delay_bias" or window_from <= d["start"].timestamp() < window_to
+        if d["kind"] == "delay_bias"
+        or _overlaps_window(d, window_from, window_to, cfg.reporting.drop_after_s)
     ]
     result.defects = len(defects)
     _write_parquet(
@@ -523,6 +566,7 @@ def _render_poll(
     tick: float,
     drop_after_s: float,
     handovers: dict[str, str],
+    retired: dict[str, _Active],
     defects: list[dict[str, Any]],
 ) -> bytes:
     features: list[dict[str, Any]] = []
@@ -536,8 +580,8 @@ def _render_poll(
         first_appearance = not item.shown
         item.shown = True
         previous = handovers.get(item.run.trip_id)
-        if first_appearance and previous is not None and previous in by_trip:
-            prev = by_trip[previous]
+        prev = by_trip.get(previous) or retired.pop(previous, None) if previous else None
+        if first_appearance and prev is not None:
             kp = len(prev.reports.t) - 1
             dup = renderer.feature(prev.run, prev.reports, kp)
             dup["geometry"] = feature["geometry"]

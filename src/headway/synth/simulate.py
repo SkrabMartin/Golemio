@@ -199,6 +199,9 @@ def make_reports(seed: int, run: TripRun, cfg: ReportingConfig, defects: TripDef
         # would print the same second as origin_timestamp but carry different content.
         del times[-2]
     t = np.array(times)
+    jumped_at: float | None = None
+    if defects.gps_jump_at is not None:
+        jumped_at = float(t[int(np.argmin(np.abs(t - defects.gps_jump_at)))])
     if defects.silent_from is not None and defects.silent_to is not None:
         t = t[(t < defects.silent_from) | (t > defects.silent_to)]
     n = len(t)
@@ -214,9 +217,11 @@ def make_reports(seed: int, run: TripRun, cfg: ReportingConfig, defects: TripDef
         for k in np.flatnonzero(off):
             ux, uy = path.heading_at(run.distance_at(float(t[k])))
             noise[k] += (uy * defects.off_shape_m, -ux * defects.off_shape_m)  # to the right
-    if defects.gps_jump_at is not None:
-        j = int(np.argmin(np.abs(t - defects.gps_jump_at)))
+    if jumped_at is not None:
+        # The report nearest the planted time, chosen before silent periods removed any. If
+        # that report is gone, the jump never happens (and is invisible).
         angle = rng.uniform(0, 2 * math.pi)
-        noise[j] += (defects.gps_jump_m * math.cos(angle), defects.gps_jump_m * math.sin(angle))
+        for j in np.flatnonzero(t == jumped_at):
+            noise[j] += (defects.gps_jump_m * math.cos(angle), defects.gps_jump_m * math.sin(angle))
     golemio = rng.normal(0.0, cfg.golemio_delay_noise_s, size=n)
     return Reports(t, published, noise, golemio, off)

@@ -201,6 +201,14 @@ def test_a_message_never_changes_under_the_same_origin_time(archive: Path) -> No
             assert seen.setdefault(key, f.model_dump_json()) == f.model_dump_json(), key
 
 
+def test_a_trip_carries_at_most_one_defect_of_each_kind(archive: Path) -> None:
+    # A second defect of the same kind would replace the first in the data but stay in truth.
+    kinds = {"gps_jump", "off_shape", "silent_trip"}
+    keys = [(d["kind"], d["trip_id"]) for d in truth(archive, "defects") if d["kind"] in kinds]
+    assert len(keys) > 20
+    assert len(keys) == len(set(keys))
+
+
 def test_planted_collector_defects_are_in_the_manifest(archive: Path) -> None:
     rows = manifest_rows(archive)
     defects = truth(archive, "defects")
@@ -253,7 +261,9 @@ def test_planted_trip_defects_are_visible(archive: Path) -> None:
             for f in poll.features
         )
         duplicates += sum(1 for n in keys.values() if n > 1)
-    assert duplicates >= sum(1 for d in defects if d["kind"] == "handover_duplicate")
+    planted = sum(1 for d in defects if d["kind"] == "handover_duplicate")
+    assert planted > 0  # an earlier version planted none, so this check passed for nothing
+    assert duplicates >= planted
 
     # A GPS jump is a single position far from where the vehicle was a poll earlier.
     jumps = {d["trip_id"]: d for d in defects if d["kind"] == "gps_jump"}
