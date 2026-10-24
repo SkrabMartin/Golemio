@@ -30,12 +30,11 @@ around the clock for weeks.
   field, null rate and discrepancy between the API's specification and its responses is
   documented in [docs/api.md](docs/api.md). The data contract in
   `src/headway/contracts/golemio_v1.py` is written against those real responses.
-- **What is synthetic:** the archive the analysis runs on. A generator (next on the
-  roadmap below) produces raw snapshots in exactly the collector's file format, from a
-  simulated network whose true delays, gaps and data defects are known. Because the truth
-  is known, every stage can be checked: does the audit find the planted defects, does the
-  reconstruction recover the true arrival times, do the prediction intervals cover what
-  they claim?
+- **What is synthetic:** the archive the analysis runs on. `headway synth` produces raw
+  snapshots in exactly the collector's file format, from a simulated network whose true
+  delays, gaps and data defects are known. Because the truth is known, every stage can be
+  checked: does the audit find the planted defects, does the reconstruction recover the
+  true arrival times, do the prediction intervals cover what they claim?
 
 Results computed from synthetic data show that the methods work. They are not findings
 about Prague, and they are labelled as synthetic wherever they appear. Point the same
@@ -48,8 +47,8 @@ produces real results.
 |---|---|---|
 | L0 collect | Polls the API, stores raw snapshots and a manifest | Implemented and tested |
 | GTFS | Daily timetable snapshots, version per service date, time conversion | Implemented and tested |
-| Synthetic archive | Generates raw snapshots with known ground truth | Next |
-| L1 ingest | Raw snapshots to a positions dataset | Planned |
+| Synthetic archive | Generates raw snapshots with known ground truth | Implemented and tested |
+| L1 ingest | Raw snapshots to a positions dataset | Next |
 | L2 audit | Data-quality findings | Planned |
 | L3 events | Stop arrival and departure reconstruction | Planned |
 | L4 metrics | Reliability and delay propagation | Planned |
@@ -75,6 +74,35 @@ uv run pytest
 ```
 
 Tests run fully offline and never call the Golemio API.
+
+## Generating the synthetic archive
+
+```sh
+uv run headway synth --days 1        # one synthetic day, about a minute, ~12 MB
+uv run headway synth                 # the full 6 weeks from config/synth.toml
+```
+
+The output goes to `synthetic/` (git-ignored):
+
+```
+synthetic/
+  SYNTHETIC.json                  marker with parameters and counts
+  raw/YYYY/MM/DD/*.json.gz        API responses in the collector's format
+  raw/manifest/YYYY-MM-DD.parquet one row per request, as the collector writes it
+  gtfs/                           timetable versions and their registry
+  truth/stop_events.parquet       true arrival and departure at every stop
+  truth/segments.parquet          planted bottlenecks and schedule padding
+  truth/defects.parquet           every planted data defect, with time and trip
+```
+
+The simulated network has 3 tram and 3 bus routes around central Prague, a weekday and a
+weekend timetable with peak, evening and night headways, and vehicle blocks that carry
+delay from one trip to the next. Vehicles report every 5 to 30 seconds with a publication
+lag tuned to the position ages seen in the real probe. The generator plants collection
+gaps, API errors, stale feeds, GPS jumps, positions off the route, silent vehicles,
+duplicate records at trip handovers and a systematic bias in the API's own delay
+estimate on one route. Every parameter is in `config/synth.toml`, and the same seed
+always produces identical output.
 
 ## Collecting real data
 
