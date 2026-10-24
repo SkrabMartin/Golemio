@@ -92,12 +92,13 @@ def service_date_of(ts: datetime, tz: str, start_min: int) -> date:
     return (ts.astimezone(ZoneInfo(tz)) - timedelta(minutes=start_min)).date()
 
 
-def _day_start_utc(day: date, tz: str, start_min: int) -> datetime:
+def day_start_utc(day: date, tz: str, start_min: int) -> datetime:
+    """Return the UTC instant at which the service day of ``day`` begins."""
     local_midnight = datetime.combine(day, clock(0), tzinfo=ZoneInfo(tz))
     return (local_midnight + timedelta(minutes=start_min)).astimezone(UTC)
 
 
-def _read_manifests(manifest_dir: Path, start: datetime, end: datetime) -> list[PollRecord]:
+def read_manifests(manifest_dir: Path, start: datetime, end: datetime) -> list[PollRecord]:
     """Return the manifest records fetched in ``[start, end)``, ordered by fetch time."""
     records: list[PollRecord] = []
     day = start.date()
@@ -289,13 +290,13 @@ def ingest_date(day: date, inputs: IngestInputs) -> dict[str, Any]:
     """Rebuild the positions, rejects and report of one service date; return the report."""
     started = time.perf_counter()
     cfg = inputs.cfg
-    start = _day_start_utc(day, inputs.tz, cfg.service_day_start_min)
-    end = _day_start_utc(day + timedelta(days=1), inputs.tz, cfg.service_day_start_min)
+    start = day_start_utc(day, inputs.tz, cfg.service_day_start_min)
+    end = day_start_utc(day + timedelta(days=1), inputs.tz, cfg.service_day_start_min)
     window = (
         start - timedelta(hours=cfg.window_before_h),
         end + timedelta(hours=cfg.window_after_h),
     )
-    records = _read_manifests(inputs.manifest_dir, *window)
+    records = read_manifests(inputs.manifest_dir, *window)
     gtfs = _gtfs_version(day, inputs.gtfs_dir)
 
     tally = _Tally()

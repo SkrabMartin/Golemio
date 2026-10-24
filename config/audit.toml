@@ -1,0 +1,71 @@
+# Thresholds of the data-quality audit (layer L2). The report prints the values used.
+# Change a value here, never in code.
+
+[collection]
+# A gap is a time between two successful polls longer than gap_factor x the poll interval.
+gap_factor = 2.0
+# Polls are aligned to the clock, but each request takes a moment. One failed poll leaves
+# 40 s plus latency between successful ones, which must not count as a gap.
+gap_tolerance_s = 2.0
+# This many consecutive polls with the identical body count as a stale feed.
+stale_feed_min_polls = 3
+# This many failed ticks in a row (no successful attempt) count as an API error run.
+api_error_min_ticks = 1
+
+[positions]
+# A position is stale when fetched_at - origin_ts exceeds this. The real probe saw a
+# median of ~20 s and a maximum of ~290 s, so this flags the slow tail, not a defect of
+# the vehicle.
+stale_age_s = 120
+# Maximum distance from the trip shape before a position counts as off the route.
+off_shape_m = 50
+# Positions closer in time than this are not used for speed (division by tiny numbers).
+jump_min_dt_s = 2
+# A position this far from the line between its two neighbours, while the neighbours agree
+# with each other, is a GPS spike. It catches jumps too small for the speed rule when
+# reports are 30 s apart. GPS noise in the synthetic data is ~6 m.
+jump_spike_m = 300
+# The two neighbours must be at most this far apart in time. Over a longer span the line
+# between them says nothing about where the vehicle was (it may have turned a corner).
+jump_spike_span_s = 60
+# Implied speed above which two consecutive positions of a trip are a GPS jump, by GTFS
+# route_type (0 tram, 1 metro, 2 rail, 3 bus, 11 trolleybus), with a default for others.
+jump_speed_default_mps = 40
+[positions.jump_speed_mps]
+"0" = 30
+"1" = 30
+"2" = 70
+"3" = 35
+"11" = 35
+
+[trips]
+# A trip with no new position for longer than this is silent. A message published late
+# leaves a gap of its age plus the report spacing; the real probe saw ages up to ~290 s, so
+# 5.5 min (330 s) stays clear of ordinary lag.
+silent_min = 5.5
+# A trip whose last position is more than this far from the end of its route, with no
+# position afterwards for silent_min, went silent and never came back.
+early_end_m = 500
+# ...unless one collector problem hid the missing tail: it starts within explain_slack_s
+# after that last position (a late message can be ~5 min old; the real probe saw up to ~290 s)
+# and lasts, give or take that slack, as long as the rest of the route takes at
+# explain_speed_mps. The speed is deliberately generous (54 km/h): the question is only
+# whether the outage COULD have hidden the rest.
+explain_slack_s = 300
+explain_speed_mps = 15
+# Silent periods that overlap a collector problem (gap, API errors, stale feed) are
+# explained by it and not reported.
+# One vehicle on two trips: an overlap of their active time spans above this is a finding.
+overlap_s = 120
+
+[severity]
+# error: data is missing or unusable; warning: suspect data; info: worth knowing.
+collection_gap = "error"
+api_errors = "warning"
+stale_feed = "warning"
+stale_position = "info"
+gps_jump = "warning"
+off_shape = "warning"
+vehicle_on_two_trips = "warning"
+silent_trip = "warning"
+unknown_trip = "error"

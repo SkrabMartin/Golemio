@@ -56,7 +56,7 @@ Paths are relative to a feature. "Null %" is over all 2,603 probed records.
 | `.origin_timestamp` | str | 0 | ISO 8601 with offset | Time the vehicle sent the message. See discrepancy 1. |
 | `.bearing` | int | 0 | degrees, 0 = north | Spec: nullable. |
 | `.speed` | int \| null | 68.1 | km/h | |
-| `.shape_dist_traveled` | str \| null | 0 | km, decimal string | Distance travelled along the trip shape. |
+| `.shape_dist_traveled` | str \| null | 0 | km, decimal string | Distance travelled along the trip shape. Checked against the GTFS shape on one poll (2026-10-24, 845 positions on their route): the distance along the polyline agrees to within 100 m for 97 % of them (median difference 2 m). |
 | `.state_position` | str | 0 | enum | Observed: `on_track`, `at_stop`. See discrepancy 2. |
 | `.tracking` | bool | 0 | | Trip is on its track. Always `true` in the probe (not-tracking trips are excluded by default). |
 | `.is_canceled` | bool \| null | 57.7 | | Trip canceled; other position fields undefined if true. Observed only `false` or null. |

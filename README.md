@@ -49,7 +49,7 @@ produces real results.
 | GTFS | Daily timetable snapshots, version per service date, time conversion | Implemented and tested |
 | Synthetic archive | Generates raw snapshots with known ground truth | Implemented and tested |
 | L1 ingest | Raw snapshots to a partitioned positions dataset, with rejects and a daily report | Implemented and tested |
-| L2 audit | Data-quality findings | Planned |
+| L2 audit | Data-quality findings with a readable daily summary | Implemented and tested |
 | L3 events | Stop arrival and departure reconstruction | Planned |
 | L4 metrics | Reliability and delay propagation | Planned |
 | L5 model | Split, baselines, nowcasts, conformal intervals | Planned |
@@ -140,6 +140,34 @@ Results go next to the archive they came from, so synthetic and real data never 
 Ingest holds one service date in memory. That is fine for the synthetic archive (about
 440 MB at its peak for one synthetic day) but real days are roughly 27 times larger in
 stored size, so a real archive would need a streaming version first.
+
+## Auditing the data
+
+```sh
+uv run headway audit --all --archive synthetic    # or --date 2026-09-28
+```
+
+The audit says what is wrong with a day of data and changes nothing. For every service date
+it writes, next to the positions in `<archive>/data/audit/service_date=YYYY-MM-DD/`:
+
+- `findings.parquet`: one row per finding (category, severity, entity, time span, value,
+  details);
+- `summary.md`: a plain-language report with poll coverage, how many positions arrived
+  fresh and on their route, the findings by category with examples, and every threshold
+  used;
+- `summary.json`: the same numbers for programs.
+
+It looks for collection gaps, runs of failed polls, stale feeds (identical responses), late
+positions, GPS jumps, positions far from the trip shape (in a metric coordinate system),
+one vehicle on two trips, trips that fall silent or stop short of the end of their route,
+and trips missing from the timetable. A silence that a collector outage explains is not
+blamed on the vehicle. All thresholds are in `config/audit.toml`.
+
+On the synthetic archive the planted defects are known, so the audit can be scored: a
+defect has to be detected if the data holds evidence of it (a jump whose message was never
+the newest at any poll, for instance, cannot be seen), and a day generated without
+defects must produce no findings. Both are tests. The audit does not judge the delay values
+the API reports; that needs the stop-event reconstruction of a later phase.
 
 ## Collecting real data
 

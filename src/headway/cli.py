@@ -202,9 +202,51 @@ def ingest(
 
 
 @app.command()
-def audit() -> None:
+def audit(
+    service_date: Annotated[
+        str | None, typer.Option("--date", help="Service date to audit, YYYY-MM-DD.")
+    ] = None,
+    all_dates: Annotated[
+        bool, typer.Option("--all", help="Audit every service date that has raw polls.")
+    ] = False,
+    archive: Annotated[
+        Path,
+        typer.Option("--archive", help="Archive root; results go to <archive>/data/audit/."),
+    ] = Path(),
+    audit_config: Annotated[
+        Path, typer.Option("--audit-config", help="Audit thresholds (TOML).")
+    ] = Path("config/audit.toml"),
+) -> None:
     """Report data-quality findings for collected days (layer L2)."""
-    _not_implemented("F5")
+    from datetime import date
+
+    from headway.audit.config import load_audit_config
+    from headway.audit.pipeline import audit_dates, audit_inputs_for
+    from headway.ingest.pipeline import available_service_dates
+
+    if (service_date is None) == (not all_dates):
+        raise typer.BadParameter("give exactly one of --date or --all")
+    inputs = audit_inputs_for(archive, load_settings(), load_audit_config(audit_config))
+    if service_date is not None:
+        try:
+            days = [date.fromisoformat(service_date)]
+        except ValueError as exc:
+            raise typer.BadParameter(f"not a date (YYYY-MM-DD): {service_date}") from exc
+    else:
+        days = available_service_dates(inputs.ingest)
+        if not days:
+            typer.echo(f"no manifest records under {inputs.ingest.manifest_dir}", err=True)
+            raise typer.Exit(code=1)
+    label = "SYNTHETIC " if inputs.ingest.synthetic else ""
+    for summary in audit_dates(days, inputs):
+        per_category = ", ".join(
+            f"{name} {info['count']}" for name, info in summary["findings"].items() if info["count"]
+        )
+        typer.echo(
+            f"{label}{summary['service_date']}: {summary['findings_total']} findings"
+            f"{' (' + per_category + ')' if per_category else ''}; "
+            f"report in {inputs.audit_dir / ('service_date=' + summary['service_date'])}"
+        )
 
 
 @app.command()
