@@ -187,6 +187,20 @@ def test_position_age_resembles_the_probe(archive: Path) -> None:
     assert ages[0] >= 0
 
 
+def test_a_message_never_changes_under_the_same_origin_time(archive: Path) -> None:
+    # A trip's last message is clamped to its arrival; it must not share a second with the
+    # one before it. Trips with a planted handover duplicate carry a copied timestamp.
+    copied = _defect_trips(archive, {"handover_duplicate"})
+    seen: dict[tuple[str, datetime], str] = {}
+    for _, poll in feeds(archive):
+        for f in poll.features:
+            trip = f.properties.trip.gtfs.trip_id
+            if trip in copied:
+                continue
+            key = (trip, f.properties.last_position.origin_timestamp)
+            assert seen.setdefault(key, f.model_dump_json()) == f.model_dump_json(), key
+
+
 def test_planted_collector_defects_are_in_the_manifest(archive: Path) -> None:
     rows = manifest_rows(archive)
     defects = truth(archive, "defects")

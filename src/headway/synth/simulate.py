@@ -194,6 +194,10 @@ def make_reports(seed: int, run: TripRun, cfg: ReportingConfig, defects: TripDef
     times = [start]
     while times[-1] < end:
         times.append(min(end, times[-1] + rng.uniform(*cfg.report_interval_s)))
+    if len(times) > 2 and times[-1] - times[-2] < cfg.report_interval_s[0]:
+        # The last message is clamped to the arrival. If it crowds the one before it, both
+        # would print the same second as origin_timestamp but carry different content.
+        del times[-2]
     t = np.array(times)
     if defects.silent_from is not None and defects.silent_to is not None:
         t = t[(t < defects.silent_from) | (t > defects.silent_to)]
