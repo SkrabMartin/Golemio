@@ -2,6 +2,7 @@
 data/
 raw/
 *.parquet
+probe_out/
 
 # Secrets
 .env

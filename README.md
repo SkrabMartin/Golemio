@@ -38,7 +38,7 @@ Development checks (the same ones CI runs):
 ```sh
 uv run ruff check .
 uv run ruff format --check .
-uv run mypy src tests
+uv run mypy src tests scripts
 uv run pytest
 ```
 
