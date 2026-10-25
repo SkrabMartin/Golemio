@@ -140,7 +140,7 @@ def _gtfs_version(day: date, gtfs_dir: Path) -> GtfsVersion | None:
         return None
 
 
-def _replace_partition(root: Path, day: date, table: pa.Table) -> None:
+def replace_partition(root: Path, day: date, table: pa.Table) -> None:
     """Replace the partition of ``day`` with ``table``; an empty table removes it."""
     folder = root / f"service_date={day}"
     if table.num_rows == 0:
@@ -311,8 +311,8 @@ def ingest_date(day: date, inputs: IngestInputs) -> dict[str, Any]:
         [("trip_start_ts", "ascending"), ("trip_id", "ascending"), ("origin_ts", "ascending")]
     )
     rejects = pa.Table.from_pylist(tally.rejects, schema=REJECTS_SCHEMA)
-    _replace_partition(inputs.positions_dir, day, positions)
-    _replace_partition(inputs.rejects_dir, day, rejects)
+    replace_partition(inputs.positions_dir, day, positions)
+    replace_partition(inputs.rejects_dir, day, rejects)
 
     reasons: dict[str, int] = {}
     for r in tally.rejects:

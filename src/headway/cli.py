@@ -250,9 +250,61 @@ def audit(
 
 
 @app.command()
-def events() -> None:
-    """Reconstruct stop arrival and departure events (layer L3)."""
-    _not_implemented("F6")
+def events(
+    service_date: Annotated[
+        str | None, typer.Option("--date", help="Service date to reconstruct, YYYY-MM-DD.")
+    ] = None,
+    all_dates: Annotated[
+        bool, typer.Option("--all", help="Reconstruct every service date that has raw polls.")
+    ] = False,
+    archive: Annotated[
+        Path,
+        typer.Option("--archive", help="Archive root; results go to <archive>/data/events/."),
+    ] = Path(),
+    events_config: Annotated[
+        Path, typer.Option("--events-config", help="Reconstruction parameters (TOML).")
+    ] = Path("config/events.toml"),
+    findings: Annotated[
+        bool,
+        typer.Option(
+            "--findings", help="Also write the reported-vs-reconstructed page and its charts."
+        ),
+    ] = False,
+) -> None:
+    """Reconstruct arrival and departure times at stops from positions (layer L3)."""
+    from datetime import date
+
+    from headway.events.config import load_events_config
+    from headway.events.pipeline import events_inputs_for, reconstruct_dates
+    from headway.ingest.pipeline import available_service_dates
+
+    if (service_date is None) == (not all_dates):
+        raise typer.BadParameter("give exactly one of --date or --all")
+    inputs = events_inputs_for(archive, load_settings(), load_events_config(events_config))
+    if service_date is not None:
+        try:
+            days = [date.fromisoformat(service_date)]
+        except ValueError as exc:
+            raise typer.BadParameter(f"not a date (YYYY-MM-DD): {service_date}") from exc
+    else:
+        days = available_service_dates(inputs.ingest)
+        if not days:
+            typer.echo(f"no manifest records under {inputs.ingest.manifest_dir}", err=True)
+            raise typer.Exit(code=1)
+    label = "SYNTHETIC " if inputs.ingest.synthetic else ""
+    for report in reconstruct_dates(days, inputs):
+        excluded = report["exclusion_reasons"] or ""
+        typer.echo(
+            f"{label}{report['service_date']}: {report['events']} events from "
+            f"{report['trips_reconstructed']} of {report['trips_with_positions']} trips "
+            f"({report['trips_excluded']} excluded {excluded}), "
+            f"{report['comparison']['n']} compared with the reported delay, "
+            f"{report['seconds']} s"
+        )
+    if findings:
+        from headway.events.findings import write_findings
+
+        typer.echo(f"findings page: {write_findings(inputs)}")
 
 
 @app.command()

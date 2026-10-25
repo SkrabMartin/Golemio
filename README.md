@@ -50,7 +50,7 @@ produces real results.
 | Synthetic archive | Generates raw snapshots with known ground truth | Implemented and tested |
 | L1 ingest | Raw snapshots to a partitioned positions dataset, with rejects and a daily report | Implemented and tested |
 | L2 audit | Data-quality findings with a readable daily summary | Implemented and tested |
-| L3 events | Stop arrival and departure reconstruction | Planned |
+| L3 events | Stop arrival and departure reconstruction, compared with the reported delay | Implemented and tested |
 | L4 metrics | Reliability and delay propagation | Planned |
 | L5 model | Split, baselines, nowcasts, conformal intervals | Planned |
 | L6 export | Static web map, Streamlit app, report | Planned |
@@ -168,6 +168,35 @@ defect has to be detected if the data holds evidence of it (a jump whose message
 the newest at any poll, for instance, cannot be seen), and a day generated without
 defects must produce no findings. Both are tests. The audit does not judge the delay values
 the API reports; that needs the stop-event reconstruction of a later phase.
+
+## Reconstructing stop events
+
+```sh
+uv run headway events --all --archive synthetic --findings
+```
+
+The source reports where a vehicle is, not when it reached each stop. Headway reconstructs
+that from the positions: each position is projected onto the trip's route in a metric
+coordinate system, the distance along the route is smoothed so that it never goes
+backwards, and a vehicle seen standing at a stop gives an arrival (when it stopped) and a
+departure (when it left). A stop the sampling skipped gets one interpolated passage time.
+Every time comes with an uncertainty of half the time between the two positions that bracket
+it, and every event is compared with the delay the source reported for the same moment.
+
+Per service date it writes `<archive>/data/events/` (one row per stop event: times, scheduled
+times, delays, uncertainty, number of positions, method), `event_exclusions/` (every trip that
+could not be reconstructed, with the reason), `event_comparison/` and `event_reports/`. With
+`--findings` it also writes a page with two charts, `data/findings/reported-vs-reconstructed.md`.
+Parameters are in `config/events.toml`.
+
+On the synthetic archive the true times are known, so the reconstruction can be scored. At
+regular 20 s and 60 s sampling, and with realistic irregular reporting, at least 98 % of
+arrival and departure times fall within their stated uncertainty (the tests require 95 %). The
+stated uncertainty is a bound; the typical error is a few seconds. The comparison also finds a
+planted bias in one route's reported delay that the audit cannot see. These are results on
+synthetic data and say nothing about real Prague. Trips that loop back over their own route
+keep their timetable distances; if those are missing the trip is excluded with a reason
+instead of guessed.
 
 ## Collecting real data
 

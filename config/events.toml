@@ -1,0 +1,33 @@
+# Parameters of the stop-event reconstruction (layer L3). Change a value here, never in code.
+
+[projection]
+# A position is projected onto the trip shape within this distance (m) of the distance the
+# API reports along the shape. The API value only tells apart the passes of a loop; it is not
+# used as the position itself.
+window_m = 500
+# Positions farther than this from the shape (m) are not used (the audit reports them).
+max_offset_m = 50
+
+[stops]
+# A vehicle that stands within this distance (m) of a stop's position along the shape is
+# serving that stop.
+radius_m = 30
+# Stops are placed along the shape with the GTFS shape_dist_traveled. If a trip lacks it, the
+# stops are projected onto the shape instead and must lie within this distance (m) of it.
+projected_stop_offset_m = 100
+
+[plateau]
+# Positions that stay within this distance (m) of each other are one place. The difference
+# of two positions has a spread of ~8.5 m when GPS noise is ~6 m, so 20 m is more than 2 of
+# them; neighbouring runs whose centres are this close are merged. A single position at a stop is enough to place the stop: the position before it
+# brackets the arrival and the one after it the departure.
+eps_m = 20
+
+[trip]
+# Trips with fewer usable positions are not reconstructed.
+min_positions = 4
+
+[compare]
+# A reconstructed delay is compared with the reported delay of the nearest position if that
+# position is at most this many seconds from the event.
+max_dt_s = 30
